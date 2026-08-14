@@ -86,6 +86,53 @@ function checkReveal() {
 window.addEventListener('scroll', checkReveal);
 checkReveal();
 
+// ── PORTFOLIO CAROUSEL
+var portfolioTrack = document.getElementById('portfolioTrack');
+var portfolioDots = document.querySelectorAll('.portfolio-dot');
+var portfolioPrev = document.getElementById('portfolioPrev');
+var portfolioNext = document.getElementById('portfolioNext');
+var portfolioIndex = 0;
+var portfolioTimer;
+
+function showPortfolio(index) {
+  var slides = document.querySelectorAll('.portfolio-slide');
+  if (!slides.length) return;
+
+  portfolioIndex = (index + slides.length) % slides.length;
+  portfolioTrack.style.transform = 'translateX(-' + (portfolioIndex * 100) + '%)';
+
+  portfolioDots.forEach(function(dot, dotIndex) {
+    dot.classList.toggle('active', dotIndex === portfolioIndex);
+  });
+}
+
+function startPortfolioAuto() {
+  clearInterval(portfolioTimer);
+  portfolioTimer = setInterval(function() {
+    showPortfolio(portfolioIndex + 1);
+  }, 2500);
+}
+
+portfolioPrev.addEventListener('click', function() {
+  showPortfolio(portfolioIndex - 1);
+  startPortfolioAuto();
+});
+
+portfolioNext.addEventListener('click', function() {
+  showPortfolio(portfolioIndex + 1);
+  startPortfolioAuto();
+});
+
+portfolioDots.forEach(function(dot) {
+  dot.addEventListener('click', function() {
+    showPortfolio(parseInt(dot.getAttribute('data-index')));
+    startPortfolioAuto();
+  });
+});
+
+showPortfolio(0);
+startPortfolioAuto();
+
 // WhatsApp: sobe quando chega no footer
 var waFloat = document.querySelector('.whatsapp-float');
 var footer = document.querySelector('footer');
